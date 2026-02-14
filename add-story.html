@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Share Story</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<h2>Share Your Story</h2>
+
+<form id="storyForm">
+  <input type="text" placeholder="Title" id="title" required><br><br>
+  
+  <select id="theme">
+    <option>Failure</option>
+    <option>Success</option>
+    <option>Mental Health</option>
+  </select><br><br>
+
+  <textarea placeholder="Write your story..." id="content"></textarea><br><br>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+document.getElementById("storyForm").onsubmit = async e => {
+  e.preventDefault();
+
+  await fetch("http://localhost:3000/add-story", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      title: title.value,
+      theme: theme.value,
+      content: content.value
+    })
+  });
+
+  alert("Story Added!");
+};
+</script>
+
+</body>
+</html>

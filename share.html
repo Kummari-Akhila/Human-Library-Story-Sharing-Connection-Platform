@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Share Your Story</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+
+  <div class="logo">
+    <a href="index.html">📖 Human Library</a>
+  </div>
+
+  <nav>
+    <a href="index.html" class="home-link">Home</a>
+    <a href="browse.html">Browse Stories</a>
+    <a href="share.html">Share Story</a>
+  </nav>
+
+</header>
+
+
+<!-- HERO SHARE SECTION -->
+<section class="share-hero">
+
+  <!-- LEFT CONTENT -->
+  <div class="share-text">
+
+    <h2 class="tagline"><strong> VOICE CAN HEAL SOMEONE</strong></h2>
+
+    <h1>
+      Share your life.<br>
+      <span>Inspire another.</span>
+    </h1>
+
+    <p style="color: black;"><strong>
+      Your experiences — whether painful or powerful —
+      can guide someone who feels alone today.
+      Become a Human Book and let your story create empathy.</strong>
+    </p>
+
+  </div>
+
+
+  <!-- RIGHT FORM CARD -->
+<form id="storyForm" class="share-form">
+
+  <h2>Share Your Story</h2>
+
+  <input type="text" id="title" placeholder="Story Title" required>
+
+  <select id="theme">
+    <option>Select Theme</option>
+    <option>Failure</option>
+    <option>Success</option>
+    <option>Mental Health</option>
+    <option>Relationships</option>
+    <option>Grief & Loss</option>
+  </select>
+
+  <textarea id="content" placeholder="Write your story..." required></textarea>
+
+  <label class="anon">
+    <input type="checkbox" id="anonymous"> Share Anonymously
+  </label>
+
+  <button type="submit" class="primary">Submit Story</button>
+
+</form>
+
+</section>
+<script>
+
+document.getElementById("storyForm").addEventListener("submit", function(e){
+
+  e.preventDefault(); // Stop page reload
+
+  // Get values
+  const title = document.getElementById("title").value;
+  const theme = document.getElementById("theme").value;
+  const content = document.getElementById("content").value;
+  const anonymous = document.getElementById("anonymous").checked;
+
+  // Create story object
+  const story = {
+    id: Date.now(),
+    title,
+    theme,
+    content,
+    anonymous
+  };
+
+  // Get existing stories
+  let stories = JSON.parse(localStorage.getItem("userStories")) || [];
+
+  // Add new story
+  stories.push(story);
+
+  // Save back
+  localStorage.setItem("userStories", JSON.stringify(stories));
+
+  alert("Story submitted successfully ❤️");
+
+  // Clear form
+  document.getElementById("storyForm").reset();
+
+});
+</script>
+
+</body>
+</html>

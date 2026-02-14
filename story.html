@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="navbar">
+
+  <div class="logo">
+    <a href="index.html">📖 Human Library</a>
+  </div>
+
+  <nav>
+    <a href="index.html" class="home-link">Home</a>
+    <a href="browse.html">Browse Stories</a>
+    <a href="share.html">Share Story</a>
+  </nav>
+
+</header>
+<div class="story-page" id="storyBox"></div>
+
+<script src="stories.js"></script>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+const story = stories[id];
+
+if(!story){
+  document.getElementById("storyBox").innerHTML =
+  "<h2>Story not found</h2>";
+}
+else{
+
+document.getElementById("storyBox").innerHTML = `
+
+  <h1>${story.title}</h1>
+
+  <p><b>Theme:</b> ${story.theme}</p>
+  <p><b>Tone:</b> ${story.tone}</p>
+
+  <p class="intro">${story.intro}</p>
+
+  <div class="story-content">
+    ${story.story.replace(/\n/g,"<br>")}
+  </div>
+
+  <blockquote>${story.reflection}</blockquote>
+
+  <h3>Lessons Learned</h3>
+
+  <ul>
+    ${story.lessons.map(l => `<li>${l}</li>`).join("")}
+  </ul>
+
+  <a href="chat.html?id=${id}" class="chat-btn">
+    Start Chat
+  </a>
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>

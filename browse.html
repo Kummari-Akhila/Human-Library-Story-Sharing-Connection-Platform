@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Browse Stories</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+
+  <div class="logo">
+    <a href="index.html">📖 Human Library</a>
+  </div>
+
+  <nav>
+    <a href="index.html" class="home-link">Home</a>
+    <a href="browse.html">Browse Stories</a>
+    <a href="share.html">Share Story</a>
+  </nav>
+
+</header>
+
+
+<!-- HERO -->
+<section class="browse-hero">
+  <h1>Explore Human Stories</h1>
+  <p>Filter stories by lived experiences and emotional journeys.</p>
+</section>
+
+
+<!-- FILTERS -->
+<div class="filter-bar">
+
+  <select id="themeFilter">
+    <option value="All">All Themes</option>
+    <option>Failure</option>
+    <option>Success</option>
+    <option>Mental Health</option>
+    <option>Relationships</option>
+    <option>Grief & Loss</option>
+  </select>
+
+  <select id="toneFilter">
+    <option value="All">All Emotional Tones</option>
+    <option>Inspirational</option>
+    <option>Healing</option>
+    <option>Reflective</option>
+    <option>Hopeful</option>
+  </select>
+
+  <button onclick="filterStories()">Apply Filters</button>
+
+</div>
+
+
+<!-- STORIES -->
+<div class="story-container" id="storyList"></div>
+
+
+<script src="stories.js"></script>
+
+<script>
+
+/* ------------------------------
+   MERGE DEFAULT + SHARED STORIES
+--------------------------------*/
+let allStories = [...stories];
+
+// Add default stories flag
+allStories = allStories.map(s => ({
+  ...s,
+  isUser:false
+}));
+
+const userStories =
+  JSON.parse(localStorage.getItem("userStories")) || [];
+
+// Add user flag
+const userMarked =
+  userStories.map(s => ({
+    ...s,
+    isUser:true
+  }));
+
+allStories = allStories.concat(userMarked);
+
+
+
+/* ------------------------------
+   DISPLAY STORIES
+--------------------------------*/
+
+function displayStories(data){
+
+  const container =
+    document.getElementById("storyList");
+
+  container.innerHTML = "";
+
+  data.forEach((story,index) => {
+
+    const preview =
+      story.content ||
+      story.intro ||
+      "No preview available.";
+
+    container.innerHTML += `
+      <div class="story-card">
+
+        <div class="card-top">
+          <span class="tag">${story.theme}</span>
+          <span class="anon">
+            ${story.anonymous ? "Anonymous" : "Public"}
+          </span>
+        </div>
+
+        <h3>${story.title}</h3>
+
+        <p>${preview.substring(0,90)}...</p>
+
+        <div class="card-actions">
+          <a href="story.html?id=${index}">
+            Read Story
+          </a>
+
+          <a href="chat.html?id=${index}"
+             class="chat-btn">
+            Chat
+          </a>
+        </div>
+
+      </div>
+    `;
+
+  });
+
+}
+
+
+/* ------------------------------
+   FILTER STORIES
+--------------------------------*/
+
+function filterStories(){
+
+  const theme =
+    document.getElementById("themeFilter").value;
+
+  const tone =
+    document.getElementById("toneFilter").value;
+
+  const filtered = allStories.filter(story => {
+
+    return (theme === "All" ||
+            story.theme === theme) &&
+
+           (tone === "All" ||
+            story.tone === tone);
+
+  });
+
+  displayStories(filtered);
+
+}
+
+
+/* ------------------------------
+   INITIAL LOAD
+--------------------------------*/
+
+displayStories(allStories);
+
+</script>
+
+</body>
+</html>

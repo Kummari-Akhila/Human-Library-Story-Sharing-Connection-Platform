@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Human Library</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+
+  <div class="logo">📖 Human Library</div>
+
+  <nav>
+    <a href="browse.html">Browse Stories</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="share.html">Share Your Story</a>
+    <span id="welcomeUser" style="margin-left:20px;"></span>
+    <button onclick="logout()" style="margin-left:10px;">Logout</button>
+  </nav>
+
+</header>
+
+
+<!-- HERO -->
+<section class="hero">
+
+  <div class="hero-text">
+
+    <p class="tagline">EVERY PERSON IS A STORY WORTH READING</p>
+
+    <h1>
+      Borrow a life.<br>
+      <span>Return with empathy.</span>
+    </h1>
+
+    <p>
+      Human Library transforms lived experiences into shared wisdom.
+      Read real stories, ask questions, and connect anonymously.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="browse.html" class="primary">Start Reading</a>
+      <a href="#how-it-works" class="secondary">How It Works</a>
+    </div>
+
+  </div>
+
+  <div class="hero-img">
+    <img src="empathy.png">
+  </div>
+
+</section>
+
+<!-- How it works -->
+
+<section id="how-it-works" class="how-section">
+
+  <h2>How Human Library Works</h2>
+
+  <div class="how-container">
+
+    <div class="how-card">
+      <h3>📖 Become a Human Book</h3>
+      <p>Share your real-life experiences anonymously or publicly.</p>
+    </div>
+
+    <div class="how-card">
+      <h3>🔍 Readers Explore Stories</h3>
+      <p>Browse stories by themes like grief, success, or healing.</p>
+    </div>
+
+    <div class="how-card">
+      <h3>💬 Connect & Converse</h3>
+      <p>Ask questions or chat anonymously with story owners.</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SHARE STORY MODAL -->
+<div id="shareModal" class="modal">
+
+  <div class="modal-content">
+    <h2>Share Your Story</h2>
+
+    <input id="storyTitle" placeholder="Story Title">
+    
+    <select id="category">
+      <option>Failure</option>
+      <option>Success</option>
+      <option>Mental Health</option>
+      <option>Relationships</option>
+    </select>
+
+    <textarea id="storyContent" placeholder="Write your story..."></textarea>
+
+    <button class="primary" onclick="submitStory()">Submit</button>
+    <button onclick="closeShare()">Close</button>
+  </div>
+
+</div>
+
+<script>
+/* ======================
+   AUTH CHECK
+====================== */
+
+const user = localStorage.getItem("loggedInUser");
+
+if (!user) {
+  window.location.href = "login.html";
+} else {
+  document.getElementById("welcomeUser").innerText =
+    "Welcome " + user + " 👋";
+}
+
+/* ======================
+   LOGOUT
+====================== */
+
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+/* ======================
+   MODAL FUNCTIONS
+====================== */
+
+function openShare() {
+  document.getElementById("shareModal").style.display = "flex";
+}
+
+function closeShare() {
+  document.getElementById("shareModal").style.display = "none";
+}
+
+/* ======================
+   SUBMIT STORY TO SERVER
+====================== */
+
+async function submitStory() {
+  const title = document.getElementById("storyTitle").value;
+  const category = document.getElementById("category").value;
+  const content = document.getElementById("storyContent").value;
+
+  if (!title || !content) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  await fetch("http://localhost:3000/add-story", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: user,
+      title,
+      category,
+      content
+    })
+  });
+
+  alert("Story submitted successfully!");
+
+  closeShare();
+}
+</script>
+
+</body>
+</html>
